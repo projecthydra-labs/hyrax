@@ -11,6 +11,7 @@ module Hyrax
 
     attribute :collection_type_gid, Valkyrie::Types::String
     attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
+    attribute :member_of_collection_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID)
 
     ##
     # @api private
