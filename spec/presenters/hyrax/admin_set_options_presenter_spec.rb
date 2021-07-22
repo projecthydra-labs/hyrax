@@ -36,10 +36,10 @@ RSpec.describe Hyrax::AdminSetOptionsPresenter do
 
       let(:workflow) { instance_double(Sipity::Workflow, allows_access_grant?: allow_access_grant) }
       let(:permission_template) { build(:permission_template, source_id: solr_doc.id, visibility: 'open') }
+
       before do
         expect(Hyrax::PermissionTemplate).to receive(:find_by).and_return(permission_template)
-        allow(presenter).to receive(:workflow) { workflow }
-        allow(permission_template).to receive(:active_workflow).and_return(true)
+        allow(permission_template).to receive(:active_workflow).and_return(workflow)
       end
 
       context 'current ability can manage the workflow though the the template does not allow access grants' do

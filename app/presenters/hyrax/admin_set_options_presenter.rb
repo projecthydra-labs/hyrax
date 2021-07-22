@@ -59,16 +59,8 @@ module Hyrax
       # > remove files from a work, and add new works to the set.
       return true if @current_ability.can?(:manage, permission_template)
 
-      # Otherwise, we check if the workflow was setup, active, and
-      # allows_access_grants.
-      wf = workflow(permission_template: permission_template)
-      return false unless wf
-      wf.allows_access_grant?
-    end
-
-    def workflow(permission_template:)
-      return unless permission_template.active_workflow
-      Sipity::Workflow.find_by!(id: permission_template.active_workflow.id)
+      # Otherwise, we check if the active workflow allows access grants
+      !!permission_template.active_workflow&.allows_access_grant?
     end
   end
 end
