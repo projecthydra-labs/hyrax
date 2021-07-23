@@ -21,6 +21,12 @@ module Hyrax
     end
 
     ##
+    # @return [Enumerable<SolrDocument>]
+    def solr_documents
+      get['response']['docs'].map { |doc| ::SolrDocument.new(doc) }
+    end
+
+    ##
     # @return [Array<String>] ids of documents matching the current query
     def get_ids # rubocop:disable Naming/AccessorMethodName
       results = get

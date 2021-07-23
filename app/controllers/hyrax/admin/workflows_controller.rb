@@ -17,12 +17,19 @@ module Hyrax
       add_breadcrumb t(:'hyrax.admin.sidebar.workflow_review'), request.path
       @status_list = Hyrax::Workflow::StatusListService.new(current_user, "-workflow_state_name_ssim:#{deposited_workflow_state_name}")
       @published_list = Hyrax::Workflow::StatusListService.new(current_user, "workflow_state_name_ssim:#{deposited_workflow_state_name}")
+      # @status_list = actionable_objects.reject(&:published?)
+      # @published_list = actionable_objects.select(&:published?)
     end
 
     private
 
     def ensure_authorized!
       authorize! :review, :submissions
+    end
+
+    def actionable_objects
+      @actionable_objects ||=
+        Hyrax::Workflow::ActionableObjects.new(user: current_user)
     end
   end
 end
