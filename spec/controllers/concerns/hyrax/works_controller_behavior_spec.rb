@@ -342,6 +342,16 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
         expect(controller).to render_template('hyrax/base/new')
       end
+
+      it 'populates allowed admin sets' do
+        admin_set = AdminSet.find_or_create_default_admin_set_id
+        FactoryBot.valkyrie_create(:hyrax_admin_set) # one without deposit access
+
+        get :new
+
+        expect(assigns['admin_set_options'].select_options)
+          .to contain_exactly(["Default Admin Set", admin_set, { "data-release-no-delay" => true, "data-sharing" => false }])
+      end
     end
   end
 

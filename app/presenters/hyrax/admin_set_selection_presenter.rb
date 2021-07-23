@@ -47,14 +47,18 @@ module Hyrax
       #   @return [AdministrativeSet, SolrDocument]
       # @!attribute [rw] permission_template
       #   @return [PermissionTemplate]
-      attr_accessor :admin_set, :permission_template
+      # @!attribute [rw] permit_sharing
+      #   @return [Boolean]
+      attr_accessor :admin_set, :permission_template, :permit_sharing
 
       ##
       # @param [AdministrativeSet, SolrDocument] admin_set
       # @param [PermissionTemplate] permission_template
-      def initialize(admin_set:, permission_template: nil)
+      # @param [Boolean] permit_sharing
+      def initialize(admin_set:, permission_template: nil, permit_sharing: false)
         @admin_set = admin_set
         @permission_template = permission_template
+        @permit_sharing = permit_sharing
       end
 
       ##
@@ -79,6 +83,8 @@ module Hyrax
       # @return [Hash{String => Object}]
       def data
         {}.tap do |data|
+          data['data-sharing'] = permit_sharing
+
           if permission_template
             data.merge!(data_for(permission_template))
           else

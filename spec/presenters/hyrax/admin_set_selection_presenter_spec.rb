@@ -28,7 +28,7 @@ RSpec.describe Hyrax::AdminSetSelectionPresenter do
     its(:id) { is_expected.to eq admin_set.id }
 
     describe '#data' do
-      it 'is a hash with no releose delay and restricted visibility' do
+      it 'is a hash with no release delay and restricted visibility' do
         expect(entry.data)
           .to include 'data-release-no-delay' => true
       end

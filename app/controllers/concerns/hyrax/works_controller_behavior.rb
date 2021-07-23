@@ -47,6 +47,7 @@ module Hyrax
     end
 
     def new
+      @admin_set_options = available_admin_sets
       # TODO: move these lines to the work form builder in Hyrax
       curation_concern.depositor = current_user.user_key
       curation_concern.admin_set_id = admin_set_id_for_new
@@ -95,6 +96,7 @@ module Hyrax
     # rubocop:enable Metrics/AbcSize
 
     def edit
+      @admin_set_options = available_admin_sets
       build_form
     end
 
@@ -436,6 +438,22 @@ module Hyrax
 
     def uploaded_files
       UploadedFile.find(params.fetch(:uploaded_files, []))
+    end
+
+    def available_admin_sets
+      admin_set_results = Hyrax::AdminSetService.new(self).search_results(:deposit)
+      # get all the templates at once, reducing query load
+      templates = PermissionTemplate.where(id: admin_set_results.map(&:id)).to_a
+
+      admin_sets = admin_set_results.map do |admin_set_doc|
+        template = templates.find { |temp| temp.source_id == admin_set_doc.id.to_s }
+        sharing = can?(:manage, template) || !!template&.active_workflow&.allows_access_grant?
+
+        AdminSetSelectionPresenter::OptionsEntry
+          .new(admin_set: admin_set_doc, permission_template: template, permit_sharing: sharing)
+      end
+
+      AdminSetSelectionPresenter.new(admin_sets: admin_sets)
     end
   end
 end

@@ -41,6 +41,10 @@ Metrics/BlockLength:
 Style/AsciiComments:
   Enabled: false
 
+# rubocop suggests !thing.nil? instead, but that is NOT equivalent
+Style/DoubleNegation:
+  Enabled: false
+
 Style/CollectionMethods:
   PreferredMethods:
     collect: 'map'
